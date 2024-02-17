@@ -1,54 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Upload or Capture Picture with Description</title>
-</head>
-<body>
-<h1>Upload or Capture Picture with Description</h1>
-<form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
-  <label for="image">Select or Capture Picture:</label><br>
-  <input type="file" id="image" name="image" accept="image/*" capture="environment"><br><br>
-  
-  <label for="description">Description:</label><br>
-  <textarea id="description" name="description" rows="4" cols="50"></textarea><br><br>
-  
-  <button type="submit">Upload</button>
-</form>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Upload or Capture Picture with Description</title>
+        <style>
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              background-color: #f4f4f4;
+            }
+            
+            .container {
+              max-width: 600px;
+              margin: 20px auto;
+              padding: 20px;
+              background-color: #fff;
+              border-radius: 5px;
+              box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+            
+            h1 {
+                width: 50%;
+              text-align: center;
+            }
+            
+            form {
+              margin-top: 20px;
+            }
+            
+            label {
+              display: block;
+              margin-bottom: 5px;
+            }
+            
+            input[type="file"] {
+              margin-bottom: 10px;
+            }
+            
+            textarea {
+              width: 50%;
+              height: auto;
+              resize: vertical;
+              margin-bottom: 10px;
+            }
+            
+            button {
+              padding: 10px 20px;
+              background-color: #b9243c;
+              color: #fff;
+              border: none;
+              border-radius: 3px;
+              cursor: pointer;
+            }
+            
+            button:hover {
+              background-color: #0056b3;
+            }
 
-<script>
-document.getElementById('uploadForm').addEventListener('submit', function(event) {
-  event.preventDefault(); // Prevent the form from submitting
-  
-  // Get the values from the form
-  var image = document.getElementById('image').files[0];
-  var description = document.getElementById('description').value;
-  
-  // Create a FormData object to send the data
-  var formData = new FormData();
-  formData.append('image', image);
-  formData.append('description', description);
-  
-  // Send the data to the server using fetch
-  fetch('/upload', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log('Upload successful:', data);
-    // Optionally, do something with the response from the server
-  })
-  .catch(error => {
-    console.error('There was a problem with your fetch operation:', error);
-  });
-});
-</script>
-</body>
+            .header{
+                display: flex;
+                justify-content: space-between;
+            }
+            img{
+                height: 50px;
+            }
+            #video {
+                width: 100%;
+                max-width: 400px;
+            }
+            </style>
+        </head>
+        <body>
+        <div class="header">
+        <img id = "logo" src="axxess-logo.png">
+        </div>
+        <h1>Upload or Capture Picture with Description</h1>
+        <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+          <label for="image">Select or Capture Picture:</label><br>
+          <input type="file" id="image" name="image" accept="image/*" capture="user"><br><br>
+          <h1>Camera Capture</h1>
+          <video id="video" autoplay></video>
+          <button id="capture-btn">Capture Image</button>
+          <canvas id="canvas" style="display: none;"></canvas>
+
+          <label for="description">Description:</label><br>
+          <textarea id="description" name="description" rows="4" cols="50"></textarea><br><br>
+          
+          <button type="submit">Upload</button>
+        </form>
+        
+        <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+          event.preventDefault(); // Prevent the form from submitting
+          
+          // Get the values from the form
+          var image = document.getElementById('image').files[0];
+          var description = document.getElementById('description').value;
+          
+          // Create a FormData object to send the data
+          var formData = new FormData();
+          formData.append('image', image);
+          formData.append('description', description);
+          
+          const video = document.getElementById('video');
+          const canvas = document.getElementById('canvas');
+          const captureButton = document.getElementById('capture-btn');
+
+            // Get access to the camera
+          navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => {
+                console.error('Error accessing the camera:', error);
+            });
+
+            // Capture image when the button is clicked
+            captureButton.addEventListener('click', () => {
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert canvas to image
+            const image = canvas.toDataURL('image/png');
+
+            // Open the image in a new tab (optional)
+            window.open(image);
+        });
+
+        // You can also send the image data to a server or perform other actions with it
+            
+          // Send the data to the server using fetch
+          fetch('/upload', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('Upload successful:', data);
+            // Optionally, do something with the response from the server
+          })
+          .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+          });
+        });
+        </script>
+    </body>
 </html>
