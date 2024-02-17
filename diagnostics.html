@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload or Capture Picture with Description</title>
+</head>
+<body>
+<h1>Upload or Capture Picture with Description</h1>
+<form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+  <label for="image">Select or Capture Picture:</label><br>
+  <input type="file" id="image" name="image" accept="image/*" capture="environment"><br><br>
+  
+  <label for="description">Description:</label><br>
+  <textarea id="description" name="description" rows="4" cols="50"></textarea><br><br>
+  
+  <button type="submit">Upload</button>
+</form>
+
+<script>
+document.getElementById('uploadForm').addEventListener('submit', function(event) {
+  event.preventDefault(); // Prevent the form from submitting
+  
+  // Get the values from the form
+  var image = document.getElementById('image').files[0];
+  var description = document.getElementById('description').value;
+  
+  // Create a FormData object to send the data
+  var formData = new FormData();
+  formData.append('image', image);
+  formData.append('description', description);
+  
+  // Send the data to the server using fetch
+  fetch('/upload', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Upload successful:', data);
+    // Optionally, do something with the response from the server
+  })
+  .catch(error => {
+    console.error('There was a problem with your fetch operation:', error);
+  });
+});
+</script>
+</body>
+</html>
