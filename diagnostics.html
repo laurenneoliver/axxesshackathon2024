@@ -103,6 +103,7 @@
         </form>
         
         <script>
+          let savedLocation = {}; // Define an object to store the location
           function getLocation() {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -112,8 +113,16 @@
             }
 
           function showPosition(position) {
-                alert("Latitude: " + position.coords.latitude + 
-                    "\nLongitude: " + position.coords.longitude);
+                // Assign latitude and longitude to variables
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+            
+                // Save the location to the savedLocation object
+                savedLocation.latitude = latitude;
+                savedLocation.longitude = longitude;
+            
+                // alert the user 
+                alert("Latitude: " + latitude + "\nLongitude: " + longitude);
           }
 
           function showError(error) {
