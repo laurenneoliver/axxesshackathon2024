@@ -1,0 +1,4 @@
+Injury diagnostics with image recognition AI: Web application that uses the Google Gemini API to classify 
+images and provide feedback as to what kind of injury is depicted as well as how to treat it and possible treatments. 
+Our application also provides a map to nearby locations for reference to local pharmacies and doctors 
+to provide further treatment easily. 
