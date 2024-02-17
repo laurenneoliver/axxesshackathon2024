@@ -77,33 +77,28 @@
         <img id = "logo" src="axxess-logo.png">
         </div>
         <h1>Upload or Capture Picture with Description</h1>
-        
+        <button onclick="getLocation()">Get Location</button>
+        <button id="openCameraButton">Cam</button>
+        <video id="webcamVideo" width="320" height="240" autoplay playsinline style="display: none;"></video>
+        <canvas id="webcamCanvas" width="320" height="240"></canvas>
+        <button id="snapButton" style="display: none;">Snap</button>
+
+        <div class="input-container">
+            <label for="photo">Photo:</label>
+            <!-- <canvas id="photo-canvas" width="320" height="240"></canvas> -->
+            <input type="file" class="input" style="color: rgb(12, 12, 12);" placeholder="photo" id="applicantPhoto"
+                name="photo" accept="image/*" capture="camera" required><br>
+        </div>
+
+        <img id="capturedImage" style="display: none;">
+        <p id="invalidmsg"></p>
         <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
-          <label for="image">Select or Capture Picture:</label><br>
-          <input type="file" id="image" name="image" accept="image/*" capture="user"><br><br>
-          <button onclick="getLocation()">Get Location</button>
-          <h1>Camera Capture</h1>
-          <video id="video" autoplay></video>
-          <button id="capture-btn">Capture Image</button>
-          <canvas id="canvas" style="display: none;"></canvas>
-          <label for="street">Street Address:</label>
-          <input type="text" id="street" name="street">
-            
-          <label for="city">City:</label>
-          <input type="text" id="city" name="city">
-            
-          <label for="state">State:</label>
-          <input type="text" id="state" name="state">
-            
-          <label for="postalCode">Postal Code:</label>
-          <input type="text" id="postalCode" name="postalCode" required>
           <label for="description">Description:</label><br>
           <textarea id="description" name="description" rows="4" cols="50"></textarea><br><br>
           <button type="submit">Upload</button>
         </form>
         
         <script>
-          let savedLocation = {}; // Define an object to store the location
           function getLocation() {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -113,16 +108,8 @@
             }
 
           function showPosition(position) {
-                // Assign latitude and longitude to variables
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-            
-                // Save the location to the savedLocation object
-                savedLocation.latitude = latitude;
-                savedLocation.longitude = longitude;
-            
-                // alert the user 
-                alert("Latitude: " + latitude + "\nLongitude: " + longitude);
+                alert("Latitude: " + position.coords.latitude + 
+                    "\nLongitude: " + position.coords.longitude);
           }
 
           function showError(error) {
@@ -141,30 +128,66 @@
                   break;
               }
           }
-          const video = document.getElementById('video');
-          const canvas = document.getElementById('canvas');
-          const captureButton = document.getElementById('capture-btn');
-
-            // Get access to the camera
-          navigator.mediaDevices.getUserMedia({ video: true })
-            .then(stream => {
-                video.srcObject = stream;
-            })
-            .catch(error => {
-                console.error('Error accessing the camera:', error);
-            });
-
-            // Capture image when the button is clicked
-          captureButton.addEventListener('click', () => {
-          const context = canvas.getContext('2d');
-          context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            // Convert canvas to image
-          const image = canvas.toDataURL('image/png');
-
-            // Open the image in a new tab (optional)
-            window.open(image);
+          
+          document.getElementById('openCameraButton').addEventListener('click', function () {
+            openCamera();
           });
+
+        function openCamera() {
+            var video = document.getElementById('webcamVideo');
+            var canvas = document.getElementById('webcamCanvas');
+            var context = canvas.getContext('2d');
+
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    userStream = stream; // Assign stream to userStream
+                    video.srcObject = userStream;
+                    video.play();
+                    video.style.display = 'block'; // Show the webcam video
+                    canvas.style.display = 'none'; // Show the webcam canvas
+
+                    // Show the "Snap" button after opening the camera
+                    var snapButton = document.getElementById('snapButton');
+                    snapButton.style.display = 'block';
+                })
+                .catch(function (error) {
+                    console.error('Error accessing webcam: ', error);
+                });
+        }
+var canvas = document.getElementById('webcamCanvas');
+canvas.style.display = 'none'; 
+
+
+        // Capture image from webcam and display it on the canvas
+       // Capture image from webcam and display it on the canvas
+var snapButton = document.getElementById('snapButton');
+snapButton.addEventListener('click', function () {
+    var video = document.getElementById('webcamVideo');
+    var canvas = document.getElementById('webcamCanvas');
+    var context = canvas.getContext('2d');
+
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    video.style.display = 'none';  // Hide the video element
+    canvas.style.display = 'none'; // Hide the canvas element
+    snapButton.style.display = 'none'; // Hide the "Snap" button
+
+    // Display the captured image
+    var capturedImage = document.getElementById('capturedImage');
+    capturedImage.src = canvas.toDataURL('image/jpeg');
+    capturedImage.style.display = 'block';
+
+    // Convert the captured image to a File object
+    var capturedFile = dataURLtoFile(capturedImage.src, 'captured_image.jpeg');
+
+    // Create a new FileList with the captured file
+    var fileInput = document.getElementById('applicantPhoto');
+    var fileList = new DataTransfer();
+    fileList.items.add(capturedFile);
+
+    // Set the 'files' property of the input to the new FileList
+    fileInput.files = fileList.files;
+});
+/*
           document.getElementById('uploadForm').addEventListener('submit', function(event) {
           event.preventDefault(); // Prevent the form from submitting
           
@@ -199,6 +222,7 @@
             console.error('There was a problem with your fetch operation:', error);
           });
         });
+        */
         </script>
     </body>
 </html>
