@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Fields</title>
+    <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: scroll;
+            background: linear-gradient(to top right,  rgb(54, 54, 54),rgb(192, 190, 190), rgb(72, 72, 72));
+        }
+         #loginerr{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    color: red;
+    font-size: larger;
+    display: none;
+}
+        #main{
+            display: flex;
+            flex-direction: column;
+            width: 60%;
+           justify-content: center;
+            align-items: center;
+        }
+
+        .input-container {
+            /* margin-bottom: 20px; */
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 20px;
+            align-items: center;
+             justify-content: space-between;
+        }
+
+        .input-container label {
+            display: block;
+            font-weight: bolder;
+            width: 18vh ;
+            font-size: 20px;
+        }
+
+        .input {
+            width: 30vh;
+            padding: 3px;
+            border: 1px solid hsl(0, 0%, 42%);
+            border-radius: 5px;
+            font-size: 16px;
+            padding: 10px;
+        }
+
+        .edit-button {
+            background-color: #5d5d5d; 
+            padding: 8px;
+            margin: 10px;
+            border-radius: 15px;
+            border-color: rgb(0, 0, 0);
+            cursor: pointer;
+            font-size: small;
+        }
+
+        .edit-button:hover {
+            background-color: #000000; 
+            color: rgb(246, 246, 246);
+        }
+        .circle-container {
+            width: 300px;
+            height: 300px;
+            overflow: hidden;
+            display: flex;
+            background-color: transparent;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 50px;
+            padding-top: 50px;
+        }
+        .circle-container img {
+            width: 100%; /* Make the image fill the container while maintaining its aspect ratio */
+            height: 100%; /* Ensure the image doesn't overflow the container */
+            border-radius: 50%;
+        }
+        button {
+            padding: 20px;
+
+            margin: 10px;
+            font-size: 20px; 
+            background-color: #5d5d5d;  
+            color: rgb(0, 0, 0); 
+            border: none;
+            border-radius: 20px; 
+            cursor: pointer;
+            transition: 0.4s; 
+        }
+
+        button:hover {
+            background-color: #000000; 
+            color: rgb(246, 246, 246);
+        }
+           #loading-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    padding: 20px;
+    border-radius: 10px;
+    display: none; /* Hidden by default */
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+#loading-spinner p {
+    margin: 0;
+    text-align: center;
+}
+
+        @media (max-width: 768px) {
+        
+        
+
+        body{
+               display: flex;
+               flex-direction: column;
+               align-items: center;
+               justify-content: center;
+               overflow: scroll;
+               background: linear-gradient(to top right,  rgb(54, 54, 54),rgb(192, 190, 190), rgb(72, 72, 72));
+           }
+   
+           #main{
+               display: flex;
+               flex-direction: column;
+               width: 100%;
+               justify-content: center;
+               align-items: center;
+               overflow: scroll;
+           }
+   
+           .input-container {
+               display: flex;
+               flex-direction: row;
+               margin-bottom: 20px;
+               align-items: center;
+                justify-content: space-between;
+           }
+   
+   
+           .input-container label {
+               display: block;
+               font-weight: bolder;
+               width: 10vh ;
+               font-size: 15px;
+   
+               
+           }
+   
+           .input {
+               width: 25vh;
+               border: 1px solid hsl(0, 0%, 42%);
+               border-radius: 5px;
+               font-size: 16px;
+               padding: 6px;
+           }
+   
+           .edit-button {
+               background-color: #5d5d5d; 
+               padding: 8px;
+               margin: 10px;
+               border-radius: 15px;
+               color: rgb(0, 0, 0); 
+               cursor: pointer;
+               font-size: small;
+           }
+   
+           .edit-button:hover {
+               background-color: #000000; 
+               color: rgb(246, 246, 246);
+           }
+   
+          .circle-container {
+               width: 300px;
+               height: 300px;
+               overflow: hidden;
+               display: flex;
+               background-color: transparent;
+               justify-content: center;
+               align-items: center;
+               padding-bottom: 50px;
+               padding-top: 50px;
+           }
+   
+           .circle-container img {
+               width: 80%; /* Make the image fill the container while maintaining its aspect ratio */
+               height: 80%; /* Ensure the image doesn't overflow the container */
+               border-radius: 50%;
+           }
+           
+     }
+
+    </style>
+</head>
+<body>
+    <p id = "loginerr">Error in login.. Please Login again</p> 
+     <div id="loading-spinner" style="display: none;">
+            <img src="VAyR.gif" alt="Loading">
+    </div>
+    <div id = "main">
+        <div class="circle-container">
+         <img id = "adminImg" src="" alt="Your Image">
+     </div>
+    <div class="input-container">
+        <label for="name">Name:</label>
+        <input type="text" class="input" placeholder="Enter name" id="name" name="name" required readonly>
+        <button class="edit-button" onclick="toggleEdit('name',this)">Edit</button>
+    </div>
+    <div class="input-container">
+        <label for="phone">Phone:</label>
+        <input type="tel" class="input" placeholder="Enter Phone Number" name='phone' id="phone" required readonly>
+        <button class="edit-button" onclick="toggleEdit('phone',this)">Edit</button>
+    </div>
+
+    <div class="input-container">
+      <label for="age">Age:</label>
+      <input type="number" class="input" placeholder="Enter age" id="age" name="age" required readonly>
+      <button class="edit-button" onclick="toggleEdit('age',this)">Edit</button>
+  </div>
+
+  <div class="input-container">
+    <label for="education">Education:</label>
+    <input type="text" class="input"  placeholder="education" id="education" name="education" required readonly><br>  
+    <button class="edit-button" onclick="toggleEdit('education',this)">Edit</button>
+  </div>
+<div class="input-container">
+    <label for="profession">Profession:</label>
+    <input type="text" class="input"  placeholder="profession" id="profession" name="profession" required readonly><br>  
+    <button class="edit-button" onclick="toggleEdit('profession',this)">Edit</button>
+</div>
+<div class="input-container">
+    <label for="mother-tongue">Mother-Tongue:</label>
+    <input type="text" class="input" placeholder="mother-tongue" id="mother-tongue" name="mother-tongue" required readonly><br>  
+    <button class="edit-button" onclick="toggleEdit('mother-tongue',this)">Edit</button>
+</div>
+<div class="input-container">
+    <label for="village">Village:</label>
+    
+    <input type="text" class="input"  placeholder="village" id="village" name="village" required readonly><br>  
+    <button class="edit-button" onclick="toggleEdit('village',this)">Edit</button>
+</div>
+<div class="input-container">
+    <label for="city">City:</label>
+   
+    <input type="text" class="input"  placeholder="city" id="city" name="city" required readonly><br>  
+    <button class="edit-button" onclick="toggleEdit('city',this)">Edit</button>
+</div>
+<div class="input-container">
+    <label for="district">District:</label>
+   
+    <input type="text" class="input"  placeholder="district" id="district" name="district" required readonly><br>  
+    <button class="edit-button" onclick="toggleEdit('district',this)">Edit</button>
+</div>
+<div class="input-container">
+    <label for="state">State:</label>
+   
+    <input type="text" class="input"  placeholder="state" id="state" name="state" required readonly><br>  
+    <button class="edit-button" onclick="toggleEdit('state',this)">Edit</button>
+</div>
+<div class="input-container">
+    <label for="country">Country:</label>
+    
+    <input type="text" class="input" placeholder="country" id="country" name="country" required readonly><br>  
+    <button class="edit-button" onclick="toggleEdit('country',this)">Edit</button>
+</div>
+<div class="input-container">
+    <label for="pincode">Pincode:</label>
+    
+    <input type="number" class="input"  placeholder="pincode" id="pincode" name="pincode" required readonly><br>  
+    <button class="edit-button" onclick="toggleEdit('pincode',this)">Edit</button>
+</div>
+
+<!-- <div class="input-container">
+    <label for="ministry experience">Ministry Experience:</label>
+    <input type="text" class="input"  placeholder="ministryExperience" id="ministryExperience" name="ministry experience" required readonly><br>  
+    <button class="edit-button" onclick="toggleEdit('ministryExperience',this)">Edit</button>
+</div>
+<div class="input-container">
+    <label for="typeofcoordinator">Type Of Coordinator:</label>
+    <input type="text" class="input"  placeholder="typeOfCoordinator" id="typeOfCoordinator" name="typeofcoordeinator" required readonly><br>  
+    <button class="edit-button" onclick="toggleEdit('typeOfCoordinator',this)">Edit</button>
+</div> -->
+    <!-- Add other input fields and edit buttons -->
+
+
+<Button id = "saveButton" > Save </Button>
+
+
+ 
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-storage.js"></script>  -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-firestore.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-storage.js"></script>
+    <script src="firebase.js"></script>
+
+    <script src="adminProfile.js"></script>
+</body>
+</html>
