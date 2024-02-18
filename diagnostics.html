@@ -8,10 +8,13 @@
             body {
               font-family: Arial, sans-serif;
               margin: 0;
-              padding: 15px;
               background-color: #f4f4f4;
             }
-            
+            #main{
+              display: flex;
+              justify-content: space-around;
+              padding: 10%;
+            }
             .container {
               max-width: 600px;
               margin: 20px auto;
@@ -22,8 +25,8 @@
             }
             
             h1 {
-                width: 50%;
-              text-align: center;
+              width: 50%;
+              text-align: left;
             }
             
             form {
@@ -70,12 +73,30 @@
                 width: 100%;
                 max-width: 400px;
             }
+            #gemini {
+                width: 50%;
+            }
+            .entry {
+                display: flex;
+                justify-content: center;
+                justify-items: center;
+                align-items: center;
+            }
+            .entry div {
+                padding: 10%;
+
+            }
+            #history{
+                border: 1px solid black;
+                margin-left: 5%;
+                margin-right: 5%;
+                background-color: white;
+            }
             </style>
         </head>
         <body>
-        <div class="header">
-        <img id = "logo" src="axxess-logo.png">
-        </div>
+        <div id="main">
+        <div id="input">
         <h1>Upload or Capture Picture with Description</h1>
         <button onclick="getLocation()">Get Location</button>
         <button id="openCameraButton">Cam</button>
@@ -84,7 +105,7 @@
         <button id="snapButton" style="display: none;">Snap</button>
 
         <div class="input-container">
-            <label for="photo">Photo:</label>
+            <p>Photo:</p>
             <!-- <canvas id="photo-canvas" width="320" height="240"></canvas> -->
             <input type="file" class="input" style="color: rgb(12, 12, 12);" placeholder="photo" id="applicantPhoto"
                 name="photo" accept="image/*" capture="camera" required><br>
@@ -93,11 +114,37 @@
         <img id="capturedImage" style="display: none;">
         <p id="invalidmsg"></p>
         <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
-          <label for="description">Description:</label><br>
+          <p>Description:</p><br>
           <textarea id="description" name="description" rows="4" cols="50"></textarea><br><br>
           <button type="submit">Upload</button>
+          
         </form>
-        
+        <button id="historyBtn" style="padding-top: 10px;">History</button>
+        </div>
+        <div id="gemini">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+        </div>
+        <div id="history" style="display: none;">
+            <div id="first-entry" class="entry">
+                <div>
+                <img id="history-img1" src="axxess-logo.png"/>
+                <p id="history-discription1">This is an example of a discription from the past.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+                <div>
+                <p>Report information will display here.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+            </div>
+            <div id="second-entry" class="entry">
+                <div>
+                    <img id="history-img1" src="axxess-logo.png"/>
+                    <p id="history-discription1">This is an example of a discription from the past.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                    <div>
+                    <p>Report information will display here.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+            </div>
+        </div>
         <script>
           function getLocation() {
                 if (navigator.geolocation) {
@@ -108,8 +155,9 @@
             }
 
           function showPosition(position) {
-                alert("Latitude: " + position.coords.latitude + 
-                    "\nLongitude: " + position.coords.longitude);
+                var location = position.coords.latitude + 
+                    "," + position.coords.longitude;
+                console.log(location);
           }
 
           function showError(error) {
@@ -154,75 +202,47 @@
                     console.error('Error accessing webcam: ', error);
                 });
         }
-var canvas = document.getElementById('webcamCanvas');
-canvas.style.display = 'none'; 
+        var canvas = document.getElementById('webcamCanvas');
+        canvas.style.display = 'none'; 
 
-
+            // Capture image from webcam and display it on the canvas
         // Capture image from webcam and display it on the canvas
-       // Capture image from webcam and display it on the canvas
-var snapButton = document.getElementById('snapButton');
-snapButton.addEventListener('click', function () {
-    var video = document.getElementById('webcamVideo');
-    var canvas = document.getElementById('webcamCanvas');
-    var context = canvas.getContext('2d');
+        var snapButton = document.getElementById('snapButton');
+        snapButton.addEventListener('click', function () {
+        var video = document.getElementById('webcamVideo');
+        var canvas = document.getElementById('webcamCanvas');
+        var context = canvas.getContext('2d');
 
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    video.style.display = 'none';  // Hide the video element
-    canvas.style.display = 'none'; // Hide the canvas element
-    snapButton.style.display = 'none'; // Hide the "Snap" button
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        video.style.display = 'none';  // Hide the video element
+        canvas.style.display = 'none'; // Hide the canvas element
+        snapButton.style.display = 'none'; // Hide the "Snap" button
 
-    // Display the captured image
-    var capturedImage = document.getElementById('capturedImage');
-    capturedImage.src = canvas.toDataURL('image/jpeg');
-    capturedImage.style.display = 'block';
+        // Display the captured image
+        var capturedImage = document.getElementById('capturedImage');
+        capturedImage.src = canvas.toDataURL('image/jpeg');
+        capturedImage.style.display = 'block';
 
-    // Convert the captured image to a File object
-    var capturedFile = dataURLtoFile(capturedImage.src, 'captured_image.jpeg');
+        // Convert the captured image to a File object
+        var capturedFile = dataURLtoFile(capturedImage.src, 'captured_image.jpeg');
 
-    // Create a new FileList with the captured file
-    var fileInput = document.getElementById('applicantPhoto');
-    var fileList = new DataTransfer();
-    fileList.items.add(capturedFile);
+        // Create a new FileList with the captured file
+        var fileInput = document.getElementById('applicantPhoto');
+        var fileList = new DataTransfer();
+        fileList.items.add(capturedFile);
 
-    // Set the 'files' property of the input to the new FileList
-    fileInput.files = fileList.files;
-});
-/*
-          document.getElementById('uploadForm').addEventListener('submit', function(event) {
-          event.preventDefault(); // Prevent the form from submitting
-          
-          // Get the values from the form
-          var image = document.getElementById('image').files[0];
-          var description = document.getElementById('description').value;
-          
-          // Create a FormData object to send the data
-          var formData = new FormData();
-          formData.append('image', image);
-          formData.append('description', description);
-          
-          
-        // You can also send the image data to a server or perform other actions with it
-            
-          // Send the data to the server using fetch
-          fetch('/upload', {
-            method: 'POST',
-            body: formData
-          })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
+        // Set the 'files' property of the input to the new FileList
+        fileInput.files = fileList.files;
+    });
+        var historyBtn = document.getElementById('historyBtn');
+        var historyContent = document.getElementById('history');
+        historyBtn.addEventListener('click', function (){
+            if (historyContent.style.display === "none") {
+                historyContent.style.display = "block";
+            } else {
+                historyContent.style.display = "none";
             }
-            return response.json();
-          })
-          .then(data => {
-            console.log('Upload successful:', data);
-            // Optionally, do something with the response from the server
-          })
-          .catch(error => {
-            console.error('There was a problem with your fetch operation:', error);
-          });
         });
-        */
         </script>
     </body>
-</html>
+</html> 
